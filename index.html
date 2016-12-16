@@ -1,0 +1,59 @@
+<table id="dataTable" class="table table-striped table-bordered table-hover dataTable no-footer">
+</table>
+
+<script>
+    function GetOrderList(page) {
+        //这个方法可以不传page参数直接调用，默认查询第一页数据
+        if (typeof (page) != "number") {
+            page = 1;
+        }
+        $.ajax({
+            url: 'xxxx',
+            data: {
+                Page: page,
+                PageSize: 10,
+            },
+            success: function (result) {
+                eval(result);
+                //初始化分页指示器，初始化之后会以after方法追加到dataTable后面
+                /*
+                option:必选参数，生成分页指示器的必要数据
+                    dataCount:  //数据总量
+                    page:       //当前页
+                    PageSize:   //每页的条数
+                function:可选参数，指示回调方式
+                    回调方式1
+                    页码变化后的回调函数，需要接受一个page参数，page指示目标页码
+                */
+                $("#dataTable").pageIndex({
+                    'dataCount': result.DataCount,  
+                    'page': page,
+                    'pageSize': 10  
+                }, GetOrderList);
+            },
+            error: function () {
+                alert("error");
+            }
+        });
+    }
+
+/*回调方式2
+    独立函数，使用指定的函数签名，pageIndexChang(page)，参数page指示目标页码
+    回调方式1优先级高于回调方式2
+*/
+    function pageIndexChang(page) {
+        $.ajax({
+            url: 'xxxx',
+            data: {
+                Page: page,
+                PageSize: 10,
+            },
+            success: function (result) {
+                eval(result);
+            },
+            error: function () {
+                alter("error");
+            }
+        });
+    }
+</script>
